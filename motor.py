@@ -1,17 +1,19 @@
-from easynect import *
+from eznect import *
 
-ctx = freenect.init()
-kinect = freenect.open_device(ctx, 1)
-freenect.start_video(kinect)
-freenect.start_depth(kinect)
 
-while True:
-    img = getVideo()
-    cv.imshow("RGB", img)
-
-    k = cv.waitKey(30)
+def body(dev, ctx):
+    k = cv.waitKey(5)
     if k == ord("w"):
-        moverCorpo(kinect)
+        moverCorpo(dev, 1, True)
+    if k == ord("x"):
+        moverCorpo(dev, -1, True)
+    if k == ord("s"):
+        moverCorpo(dev, 0)
+    if k == ord("a"):
+        freenect.set_led(dev, freenect.LED_GREEN)
     if k == ord("q"):
-        break
+        raise freenect.Kill
+
+
+freenect.runloop(video=runDisplayVideo, body=body)
 cv.destroyAllWindows()

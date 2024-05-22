@@ -4,9 +4,11 @@ import freenect
 import numpy as np
 import cv2 as cv
 import time
-import random
 
+cv.namedWindow("RGB")
 lastTime = time.time()
+__tiltLastTime = 0
+__tiltCurState = 0
 
 def getDepth():
     '''
@@ -24,7 +26,13 @@ def getVideo():
     array = cv.cvtColor(array,cv.COLOR_RGB2BGR)
     return array
 
-def pretty_depth(depth):
+def runDisplayVideo(dev, data, timestamp):
+    '''
+        Roda o vídeo no runloop
+    '''
+    cv.imshow("RGB", cvVideo(data))
+
+def prettyDepth(depth):
     '''
         Retorna a profundidade como uma matriz mais visivel para o opencv
     '''
@@ -33,16 +41,35 @@ def pretty_depth(depth):
     depth = depth.astype(np.uint8)
     return depth
 
-def moverCorpo(dev):
-    global lastTime
-    if time.time() - lastTime < 3:
-        return
-    lastTime = time.time()
-    led = random.randint(0, 6)
-    tilt = random.randint(0, 30)
-    freenect.set_led(dev, led)
-    freenect.set_tilt_degs(dev, tilt)
-    print('led[%d] tilt[%d] accel[%s]' % (led, tilt, freenect.get_accel(dev)))
+def moverCorpo(dev: freenect.DevPtr, tilt: int, acc=False):
+    """
+        Move o corpo do Kinect
+        Args:
+            dev: Ponteiro de dispositivo do Kinect
+            tilt: Inclinação da câmera
+            acc: Acumula ou não na inclinação atual
+    """
+    global __tiltCurState
+    if not acc:
+        __tiltCurState = tilt
+        freenect.set_tilt_degs(dev, tilt)
+    else:
+        if -30 < __tiltCurState + tilt < 30:
+            __tiltCurState += tilt
+            freenect.set_tilt_degs(dev, __tiltCurState)
+
+def cvVideo(video):
+    """Converts video into a BGR format for display
+
+    This is abstracted out to allow for experimentation
+
+    Args:
+        video: A numpy array with 1 byte per pixel, 3 channels RGB
+
+    Returns:
+        A numpy array with with 1 byte per pixel, 3 channels BGR
+    """
+    return video[:, :, ::-1]  # RGB -> BGR
 '''
 freenect.LED_BLINK_GREEN        
 freenect.VIDEO_IR_10BIT_PACKED
