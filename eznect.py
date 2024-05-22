@@ -5,7 +5,6 @@ import numpy as np
 import cv2 as cv
 import time
 
-cv.namedWindow("RGB")
 lastTime = time.time()
 __tiltLastTime = 0
 __tiltCurState = 0
