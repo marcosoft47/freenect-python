@@ -22,21 +22,26 @@ def getVideo():
         Retorna o vídeo como matriz do OpenCV
     '''
     array,_ = freenect.sync_get_video()
-    array = cv.cvtColor(array,cv.COLOR_RGB2BGR)
+    array = cv.cvtColor(array,cv.COLOR_BGR2RGB) 
     return array
 
 def runDisplayVideo(dev, data, timestamp):
     '''
-        Roda o vídeo no runloop
+        Roda o vídeo no runloop.
+        Recomendado usar apenas em testes
     '''
-    cv.imshow("RGB", cvVideo(data))
+    cv.imshow("RGB", cv.cvtColor(data, cv.COLOR_BGR2RGB))
 
-def prettyDepth(depth):
+def prettyDepth(depth, smoothness=0):
     '''
-        Retorna a profundidade como uma matriz mais visivel para o opencv
+        Retorna a profundidade como uma matriz visivel para o opencv
+
+        Args:
+            depth: Mapa de profundidade
+            smoothness: O quão liso quer a imagem
     '''
     np.clip(depth, 0, 1023, depth)
-    depth >>= 2
+    depth >>= smoothness
     depth = depth.astype(np.uint8)
     return depth
 
@@ -57,18 +62,6 @@ def moverCorpo(dev: freenect.DevPtr, tilt: int, acc=False):
             __tiltCurState += tilt
             freenect.set_tilt_degs(dev, __tiltCurState)
 
-def cvVideo(video):
-    """Converts video into a BGR format for display
-
-    This is abstracted out to allow for experimentation
-
-    Args:
-        video: A numpy array with 1 byte per pixel, 3 channels RGB
-
-    Returns:
-        A numpy array with with 1 byte per pixel, 3 channels BGR
-    """
-    return video[:, :, ::-1]  # RGB -> BGR
 '''
 freenect.LED_BLINK_GREEN        
 freenect.VIDEO_IR_10BIT_PACKED

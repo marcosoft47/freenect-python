@@ -17,8 +17,11 @@ def canny_edge_detection(frame):
 
 def displayVideo(dev, data, timestamp):
     blurred, edges = canny_edge_detection(data) 
-    cv2.imshow("Blurred", blurred) 
-    cv2.imshow("Edges", edges) 
+    cv2.imshow("RGB", cv2.cvtColor(data, cv2.COLOR_BGR2RGB))
+    # cv2.imshow("Edges", edges) 
+
+def displayDepth(dev, data, timestamp):
+     cv2.imshow("Depth", eznect.prettyDepth(data))
 	
 def main(dev, ctx): 
     
@@ -35,6 +38,6 @@ def main(dev, ctx):
 	
 	# Release the webcam and close the windows 
 
-freenect.runloop(body=main, video=displayVideo)
+freenect.runloop(body=main, video=displayVideo, depth=displayDepth)
 
 cv2.destroyAllWindows()
