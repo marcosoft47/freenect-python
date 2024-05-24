@@ -1,3 +1,5 @@
+# Example showcasing how you can use OpenCV stuff in the runloop
+
 import cv2 
 import eznect
 import freenect

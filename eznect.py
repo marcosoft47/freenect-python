@@ -3,11 +3,27 @@
 import freenect
 import numpy as np
 import cv2 as cv
-import time
 
-lastTime = time.time()
-__tiltLastTime = 0
+__curLed = 0
 __tiltCurState = 0
+leds = [freenect.LED_OFF,
+        freenect.LED_GREEN, 
+        freenect.LED_RED, 
+        freenect.LED_YELLOW, 
+        freenect.LED_BLINK_GREEN, 
+        freenect.LED_BLINK_RED_YELLOW]
+
+def ciclarLed(dev: freenect.DevPtr):
+    '''
+        Cicla o Led para o próximo led
+        Args:
+            dev: Ponteiro de dispositivo do Kinect
+    '''
+    global __curLed
+    __curLed += 1
+    if __curLed > len(leds):
+        __curLed = 0
+    freenect.set_led(dev, leds[__curLed])
 
 def getDepth():
     '''
@@ -62,24 +78,52 @@ def moverCorpo(dev: freenect.DevPtr, tilt: int, acc=False):
             __tiltCurState += tilt
             freenect.set_tilt_degs(dev, __tiltCurState)
 
+def controlarKinect(dev: freenect.DevPtr, k: int):
+    '''
+        Controlador geral do Kinect
+        Args:
+            dev: Ponteiro de dispositivo do Kinect
+            k: Código Unicode do caracter
+                Use a função ord(caracter) para descobrir o código
+        Botões:
+        q: Encerra o runloop
+        w: Sobe o motor da câmera em 1 grau
+        x: Desce o motor da câmera em 1 grau
+        s: Nivela a câmera
+        l: Cicla o led
+    '''
+    k = ord(k)
+    if k == ord('w'):
+        moverCorpo(dev, 1, True)
+    if k == ord('x'):
+        moverCorpo(dev, -1, True)
+    if k == ord('s'):
+        moverCorpo(dev, 0)
+    if k == ord("l"):
+        ciclarLed(dev)
+    if k == ord('q'):
+        raise freenect.Kill
+
+
 '''
-freenect.LED_BLINK_GREEN        
-freenect.VIDEO_IR_10BIT_PACKED
-freenect.DEPTH_10BIT            
-freenect.LED_BLINK_RED_YELLOW   
-freenect.VIDEO_IR_8BIT
-freenect.DEPTH_10BIT_PACKED     
-freenect.LED_GREEN              
-freenect.VIDEO_RGB
-freenect.DEPTH_11BIT            
-freenect.LED_OFF                
-freenect.VIDEO_YUV_RAW          
-freenect.np                     
-freenect.DEPTH_11BIT_PACKED     
-freenect.LED_RED                
-freenect.VIDEO_YUV_RGB
-freenect.DEPTH_MM               
+freenect.LED_OFF
+freenect.LED_GREEN
+freenect.LED_RED
 freenect.LED_YELLOW
+freenect.LED_BLINK_GREEN 
+freenect.LED_BLINK_RED_YELLOW
+
+freenect.VIDEO_IR_10BIT_PACKED
+freenect.DEPTH_10BIT
+freenect.VIDEO_IR_8BIT
+freenect.DEPTH_10BIT_PACKED
+freenect.VIDEO_RGB
+freenect.DEPTH_11BIT
+freenect.VIDEO_YUV_RAW          
+freenect.np
+freenect.DEPTH_11BIT_PACKED
+freenect.VIDEO_YUV_RGB
+freenect.DEPTH_MM
 freenect.DEPTH_REGISTERED       
 freenect.RESOLUTION_HIGH
 freenect.DEVICE_AUDIO           

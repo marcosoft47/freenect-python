@@ -1,34 +1,27 @@
+# Example showcasing that you don't need the runloop to get it working!
+# It uses freenect.sync_get_depth() and freenect.sync_get_video()
+# TODO: make it simple, add more functions
+
 import cv2 as cv
 import freenect
 import numpy as np
-
-#function to get depth image from kinect
-def get_depth():
-    array,_ = freenect.sync_get_depth()
-    array = array.astype(np.uint16)
-    return array
-
-def get_video():
-    array,_ = freenect.sync_get_video()
-    array = cv.cvtColor(array,cv.COLOR_RGB2BGR)
-    return array
+from eznect import getDepth, getVideo
 
 if __name__ == "__main__":
     face_cascade = cv.CascadeClassifier('../../data/haarcascade/haarcascade_frontalface_default.xml')
     font = cv.FONT_HERSHEY_SIMPLEX
     showText = False
     #pegar uma vez para não travar a imagem no começo do vídeo
-    depth = get_depth()
+    depth = getDepth()
     while True:
-        img = get_video()
-        # depth = get_depth()
+        img = getVideo()
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY) 
         faces = face_cascade.detectMultiScale(gray, 1.3, 5) 
     
         for (x,y,w,h) in faces: 
             testa_x = x+w//2
             testa_y = y+h//8
-            depth = get_depth()
+            depth = getDepth()
             cv.rectangle(img,(x,y),(x+w,y+h),(255,0,128),2)
             cv.rectangle(img,(testa_x,0),(testa_x,1080),(0,0,0),2)
             cv.rectangle(img,(0,testa_y),(1920,testa_y),(0,0,0),2)
