@@ -2,7 +2,7 @@
 Everything I gathered from freenect's python wrapper
  **Note:** The File _eznect.py_ was made to simplify some stuff. Feel free to add it in your projects!
 
-# Instalation
+# Installation
 
 To install freenect, you will need to download the drivers and the python wrapper. Never managed to install the python wrapper in debian/ubuntu, so I suggest you to use another distro. It works just fine in Fedora.
 
