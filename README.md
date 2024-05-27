@@ -1,6 +1,6 @@
 # freenect-python
 Everything I gathered from freenect's python wrapper
- **Note:** The File _eznect.py_ was made to simplify some stuff. Feel free to add it in your projects!
+ **Note:** The file `eznect.py` was made to simplify some stuff. Feel free to add it in your projects!
 
 # Installation
 
@@ -8,15 +8,12 @@ To install freenect, you will need to download the drivers and the python wrappe
 
 The drivers can be downloaded with your favorite package manager, or by [building the source](https://github.com/OpenKinect/libfreenect)
 
-```
-sudo dnf install libfreenect
-```
+    sudo dnf install libfreenect
 
 The python wrapper is supposed to be downloaded with the source, but I never managed to download it right. You can install with your package manager (there's no python wrapper in apt, sorry debian/ubuntu users)
 
-```
-sudo dnf install python3-libfreenect
-```
+    sudo dnf install python3-libfreenect
+
 
 # Functions
 
@@ -90,3 +87,21 @@ Do not use with _freenect.runloop()_!
 
 Returns the depth map as a 480x640 numpy array and the timestamp.
 Do not use with _freenect.runloop()_!
+
+# Fixnect
+
+Sometimes, you may get a libusb error, saying access denied. This happens because libusb doesn't have the proper permissions to read the Kinect camera. The following command may fix it:
+
+    sudo chmod -R 777 /dev/bus/usb/
+
+Since it happens frequently, I suggest you to make it an alias. Add the following to your `.bashrc` (or similar) file, so you can just run `fixnect` in your terminal
+
+    alias fixnect="sudo chmod -R 777 /dev/bus/usb/"
+
+# About
+
+## Freenect
+
+Freenect is an open source driver for the Microsoft Kinect camera. It was developed by the Open Kinect community. You can check more about it in [their website](https://openkinect.org/wiki/Main_Page).
+
+The freenect driver have many wrappers, including one for python. The main point of this repository is to document how the python wrapper works.
