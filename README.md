@@ -88,7 +88,8 @@ Do not use with _freenect.runloop()_!
 Returns the depth map as a 480x640 numpy array and the timestamp.
 Do not use with _freenect.runloop()_!
 
-# Fixnect
+# Troubleshooting
+## Fixnect
 
 Sometimes, you may get a libusb error, saying access denied. This happens because libusb doesn't have the proper permissions to read the Kinect camera. The following command may fix it:
 
@@ -97,6 +98,12 @@ Sometimes, you may get a libusb error, saying access denied. This happens becaus
 Since it happens frequently, I suggest you to make it an alias. Add the following to your `.bashrc` (or similar) file, so you can just run `fixnect` in your terminal
 
     alias fixnect="sudo chmod -R 777 /dev/bus/usb/"
+
+## Intellisense not working
+
+Pylance doesn't recognize freenect properly. Use Jedi instead.
+
+In VS Code, go to: Settings > python.languageserver > jedi
 
 # About
 
