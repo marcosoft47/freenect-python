@@ -8,7 +8,7 @@ import numpy as np
 from eznect import getDepth, getVideo
 
 if __name__ == "__main__":
-    face_cascade = cv.CascadeClassifier('../../data/haarcascade/haarcascade_frontalface_default.xml')
+    face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
     font = cv.FONT_HERSHEY_SIMPLEX
     showText = False
     #pegar uma vez para não travar a imagem no começo do vídeo

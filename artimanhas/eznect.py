@@ -73,7 +73,7 @@ def runDisplayVideo(dev, data, timestamp):
     '''
     cv.imshow("RGB", cv.cvtColor(data, cv.COLOR_BGR2RGB))
 
-def cvDepth(depth: np.ndarray, smoothness=0) -> np.ndarray:
+def prettyDepth(depth: np.ndarray, smoothness=0) -> np.ndarray:
     '''
         Retorna a profundidade como uma matriz visivel para o opencv
 
@@ -128,6 +128,7 @@ def controlarKinect(dev: freenect.DevPtr, k: int):
         ciclarLed(dev)
     if k == ord('q'):
         raise freenect.Kill
+
 
 '''
 freenect.LED_OFF

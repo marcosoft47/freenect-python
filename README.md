@@ -1,10 +1,11 @@
-# freenect-python
+# Freenect's Python Wrapper
 Everything I gathered from freenect's python wrapper
+
  **Note:** The file `eznect.py` was made to simplify some stuff. Feel free to add it in your projects!
 
 # Installation
 
-To install freenect, you will need to download the drivers and the python wrapper. Never managed to install the python wrapper in debian/ubuntu, so I suggest you to use another distro. It works just fine in Fedora.
+To install freenect, you will need to download the drivers and the python wrapper.
 
 The drivers can be downloaded with your favorite package manager, or by [building the source](https://github.com/OpenKinect/libfreenect)
 
@@ -17,10 +18,16 @@ The python wrapper is supposed to be downloaded with the source, but I never man
 
 # Functions
 
+## With runloop()
+
+The freenect runloop is the main body. Every loop it calls a function to handle the video and depth. It also gives you the Device Pointer, which allow you to control / read stuff like the motor, accelerometer and LED.
+
+Useful if your project relys heavily in the Kinect. If you only need the video/depth map, check how to avoid using the runloop in a section below.
+
 ### _freenect.runloop(depth=None, video=None, body=None, dev=None)_
 **arguments: function, function, function, freenect.DevPtr**
 
-This is what we can call the main function. This function is pretty much a while True function. The functions are supposed to handle the depth, video and everything else, in order. This is pretty much the only way to get a **freenect.DevPtr**.
+This is the main function. It's pretty much a while True. The functions are supposed to handle the depth, video and everything else, in order. This is pretty much the only way to get a **freenect.DevPtr**.
 
 If you have multiple kinects, you can specify which kinect you are using by providing the device context.
 
@@ -37,7 +44,9 @@ If you have multiple kinects, you can specify which kinect you are using by prov
 
 ### _freenect.get\_accel(dev)_
 **arguments: freenect.DevPtr**
+
 **returns: (int x, int y, int z)**
+
 Return the (x,y,z) of the accelerometer
 
 x : Horizontal axis rotation
@@ -59,7 +68,7 @@ Sets Kinect's camera angle, in degrees.
 
 The angle should be in the range: -30 < α < 30
 
-Note that the leveling is not related to the base, but related to earth.
+Note that the leveling is not related to the base, but related to ground level.
 
 
 ### _freenect.set\_led(dev, option)_
@@ -75,18 +84,21 @@ Changes Kinect's LED. The LED options are:
     freenect.LED_BLINK_RED_YELLOW
 
 
+## Without runloop()
+
+The following functions doesn't need the runloop. It's handy if you only need the video and depth.
+
 ### _freenect.sync\_get\_video()_
 **returns: numpy.ndarray video, int timestamp**
 
 Returns the BGR video as a 480x640x3 numpy array and the timestamp.
-Please note that it returns the video as a BGR video, instead of RGB. You can use cv2.cvtcolor(video, cv2.BGR2RGB)
-Do not use with _freenect.runloop()_!
+Please note that it returns the video as a BGR video, instead of RGB. You can use cv2.cvtcolor(video, cv2.BGR2RGB).
 
 ### _freenect.sync\_get\_depth()_
 **return: numpy.ndarray video, int timestamp**
 
 Returns the depth map as a 480x640 numpy array and the timestamp.
-Do not use with _freenect.runloop()_!
+
 
 # Troubleshooting
 ## Fixnect
@@ -99,11 +111,15 @@ Since it happens frequently, I suggest you to make it an alias. Add the followin
 
     alias fixnect="sudo chmod -R 777 /dev/bus/usb/"
 
-## Intellisense not working
+## Autocomplete / Intelisense not working
 
 Pylance doesn't recognize freenect properly. Use Jedi instead.
 
 In VS Code, go to: Settings > python.languageserver > jedi
+
+## Your english sucks
+
+lmao cry about it
 
 # About
 

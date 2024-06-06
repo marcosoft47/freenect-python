@@ -5,7 +5,7 @@ if __name__ == "__main__":
         img = getVideo()
         depth = getDepth()
         cv.imshow("RGB", img)
-        cv.imshow("Depth", prettyDepth(depth))
+        cv.imshow("Depth", cvDepth(depth))
         k = cv.waitKey(30) & 0xff
         if k == ord('q'): 
             break
