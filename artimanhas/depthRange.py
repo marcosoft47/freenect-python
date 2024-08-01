@@ -13,6 +13,7 @@ if __name__ == "__main__":
         # mask = (scope - threshold < depth) & (depth < scope + threshold)
         mask = np.logical_and((scope - threshold < depth), (depth < scope + threshold))
         mask = np.logical_and(mask, depth != 2047)
+        
 
         a[mask] = img[mask] # fonte: gepeto
         # a[np.logical_not(mask)] = (255,255,255)

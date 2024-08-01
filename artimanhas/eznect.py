@@ -1,8 +1,7 @@
 ''' Facilidades do freenect '''
 
 import freenect
-import numpy as np
-import cv2 as cv
+from freenect import np
 
 __curLed = 0
 __tiltCurState = 0
@@ -22,21 +21,28 @@ def getDepth() -> np.ndarray:
     array = array.astype(np.uint16)
     return array
 
-def getVideo() -> np.ndarray:
-    '''
-        Retorna o vídeo como matriz do OpenCV
-    '''
-    array,_ = freenect.sync_get_video()
-    array = cv.cvtColor(array,cv.COLOR_BGR2RGB) 
+def getIR() -> np.ndarray:
+    array,_ = freenect.sync_get_video(0, freenect.VIDEO_IR_8BIT)
+    np.clip(array, 0, 2047, array)
     return array
 
-def ciclarLed(dev: freenect.DevPtr):
+def getVideo() -> np.ndarray:
     '''
-        Cicla o LED para o próximo LED da fila
-        Args:
-            dev: Ponteiro de dispositivo do Kinect
+        Return Kinect's video
 
-        Fila: Desligado, Verde, Vermelho, Amarelo, Piscando Verde, Piscando Vermelho e Amarelo
+        Returns:
+            Video as a numpy array in RGB format
+    '''
+    array,_ = freenect.sync_get_video()
+    array = array[:, :, ::-1]
+    return array
+
+def cycleLed(dev: freenect.DevPtr):
+    '''
+        Cycles between LEDs
+        Args:
+            dev: Kinect device pointer
+        Queue: OFF, GREEN, RED, YELLOW, BLINKING GREEN, BLINKING RED AND YELLOW
     '''
     global __curLed
     __curLed += 1
@@ -44,16 +50,15 @@ def ciclarLed(dev: freenect.DevPtr):
         __curLed = 0
     freenect.set_led(dev, leds[__curLed])
 
-def mudarLed(dev: freenect.DevPtr, cor: int):
+def changeLed(dev: freenect.DevPtr, color: int):
     '''
-        Muda o Led para a cor especificada
+        Changes LED to specified color
 
         Args:
-            dev: Ponteiro de dispositivo do Kinect
-            cor: Constante da cor do LED
+            dev: Kinect device pointer
+            color: LED's color
         
-        Opções de cor:
-
+        color options:
             freenect.LED_OFF,
             freenect.LED_GREEN, 
             freenect.LED_RED, 
@@ -64,38 +69,38 @@ def mudarLed(dev: freenect.DevPtr, cor: int):
     if 0 <= cor <= 5:
         freenect.set_led(dev, cor)
     else:
-        print("Cor inválida!\nEscolha uma das cores que o Freenect oferece (freenect.LED_*)")
+        print("Invalid color!\nChoose one that Freenect offers (freenect.LED_*)")
 
-def runDisplayVideo(dev, data, timestamp):
-    '''
-        Roda o vídeo no runloop.
-        Recomendado usar apenas em testes
-    '''
-    cv.imshow("RGB", cv.cvtColor(data, cv.COLOR_BGR2RGB))
+# def runDisplayVideo(dev, data, timestamp):
+#     '''
+#         Roda o vídeo no runloop.
+#         Recomendado usar apenas em testes
+#     '''
+#     cv.imshow("RGB", cv.cvtColor(data, cv.COLOR_BGR2RGB))
 
 def prettyDepth(depth: np.ndarray, smoothness=0) -> np.ndarray:
     '''
-        Retorna a profundidade como uma matriz visivel para o opencv
+        Return depth as a smoother depth map
 
         Args:
-            depth: Mapa de profundidade
-            smoothness: O quão liso quer a imagem
+            depth: Depth map
+            smoothness: How smooth the depth map will become
     '''
-    np.clip(depth, 0, 1023, depth)
+    np.clip(depth, 0, 2047, depth)
     depth >>= smoothness
     depth = depth.astype(np.uint8)
     return depth
 
-def moverCorpo(dev: freenect.DevPtr, tilt: int, acc=False):
+def moveBody(dev: freenect.DevPtr, tilt: int, accumulate=False):
     """
-        Move o corpo do Kinect
+        Moves Kinect's body
         Args:
-            dev: Ponteiro de dispositivo do Kinect
-            tilt: Inclinação da câmera
-            acc: Acumula ou não na inclinação atual
+            dev: Kinect device pointer
+            tilt: Body's inclination
+            accumulate: Accumulates to inclination or not
     """
     global __tiltCurState
-    if not acc:
+    if not accumulate:
         __tiltCurState = tilt
         freenect.set_tilt_degs(dev, tilt)
     else:
@@ -103,32 +108,31 @@ def moverCorpo(dev: freenect.DevPtr, tilt: int, acc=False):
             __tiltCurState += tilt
             freenect.set_tilt_degs(dev, __tiltCurState)
 
-def controlarKinect(dev: freenect.DevPtr, k: int):
+def controlKinect(dev: freenect.DevPtr, k: int):
     '''
-        Controlador geral do Kinect
+        Compilation of buttons to control the Kinect
         Args:
-            dev: Ponteiro de dispositivo do Kinect
-            k: Código Unicode do caracter
-                Use a função ord(caracter) para descobrir o código
+            dev: Kinect device point3er
+            k: character unicode
+                use ord(char) to find the character unicode
         Botões:
-        q: Encerra o runloop
-        w: Sobe o motor da câmera em 1 grau
-        x: Desce o motor da câmera em 1 grau
-        s: Nivela a câmera
-        l: Cicla o led
+        q: Kills the runloop
+        w: Tilt the body 1 degree above
+        x: Tilt the body 1 degree below
+        s: Levels the body
+        l: Cycles between LEDs
     '''
     k = ord(k)
     if k == ord('w'):
-        moverCorpo(dev, 1, True)
+        moveBody(dev, 1, True)
     if k == ord('x'):
-        moverCorpo(dev, -1, True)
+        moveBody(dev, -1, True)
     if k == ord('s'):
-        moverCorpo(dev, 0)
+        moveBody(dev, 0)
     if k == ord("l"):
-        ciclarLed(dev)
+        cycleLed(dev)
     if k == ord('q'):
         raise freenect.Kill
-
 
 '''
 freenect.LED_OFF

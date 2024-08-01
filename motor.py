@@ -1,19 +1,22 @@
-from eznect import *
-
+import eznect
+import freenect
+import cv2 as cv
 
 def body(dev, ctx):
     k = cv.waitKey(5)
     if k == ord("w"):
-        moverCorpo(dev, 1, True)
+        eznect.moveBody(dev, 1, True)
     if k == ord("x"):
-        moverCorpo(dev, -1, True)
+        eznect.moveBody(dev, -1, True)
     if k == ord("s"):
-        moverCorpo(dev, 0)
+        eznect.moveBody(dev, 0)
     if k == ord("a"):
-        freenect.set_led(dev, freenect.LED_GREEN)
+        eznect.cycleLed(dev)
     if k == ord("q"):
         raise freenect.Kill
 
+def video(dev, video, timestamp):
+    cv.imshow("Video", video)
 
-freenect.runloop(video=runDisplayVideo, body=body)
+freenect.runloop(video=video, body=body)
 cv.destroyAllWindows()

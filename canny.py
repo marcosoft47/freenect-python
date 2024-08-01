@@ -30,11 +30,11 @@ def main(dev, ctx):
     # Exit the loop when 'q' key is pressed 
     k = cv2.waitKey(1)
     if k == ord("w"):
-        eznect.moverCorpo(dev, 1, True)
+        eznect.moveBody(dev, 1, True)
     if k == ord("x"):
-        eznect.moverCorpo(dev, -1, True)
+        eznect.moveBody(dev, -1, True)
     if k == ord("s"):
-        eznect.moverCorpo(dev, 0)
+        eznect.moveBody(dev, 0)
     if k == ord("q"): 
         raise freenect.Kill
 	
