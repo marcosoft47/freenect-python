@@ -15,6 +15,10 @@ The python wrapper is supposed to be downloaded with the source, but I never man
 
     sudo dnf install python3-libfreenect
 
+# How to use it
+
+Check the [docs folder](https://github.com/marcosoft47/freenect-python/tree/main/docs) and the other examples in the examples folder.
+
 # Troubleshooting
 ## Fixnect
 
@@ -36,6 +40,6 @@ In VS Code, go to: Settings > python.languageserver > jedi
 
 lmao cry about it
 
-# RTFM
+## RTFM
 
-I tried my best to compile every (useful) technical detail in 
+I tried my best to compile every (useful) technical detail in the docs folder.

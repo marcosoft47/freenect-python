@@ -6,13 +6,11 @@ From my tests, it can capture audio from more than 10 meters easily (as long as 
 
 ## Linux
 
-Aparently, 
+Aparently, the Kinect works fine as a microphone in Linux. My system (Fedora 40 and Ubuntu 24.04) doesn't recognize the microphone. It may be troublesome because it's actually four microphones in a trench coat.
+
+If you managed to make it work, please contact me!
 
 ## Coding
 The python wrapper doesn't support audio (yet!)
 
-Some solutions that might work:
-
-### 1- Use it as a normal microphone
-
-I couldn't find a way to make the Kinect microphone work as microphone. Try the following (and update me if you managed to make it work, specially in Fedora/Ubuntu)
+You can use it as a microphone (if you manage to make it work as one)

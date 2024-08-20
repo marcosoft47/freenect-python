@@ -1,7 +1,7 @@
 # Example showcasing how you can use OpenCV stuff in the runloop
 
 import cv2 
-import eznect
+import kinect.examples.eznect as eznect
 import freenect
 
 def canny_edge_detection(frame): 

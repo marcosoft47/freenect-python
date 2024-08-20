@@ -1,4 +1,4 @@
-import eznect
+import kinect.examples.eznect as eznect
 import freenect
 import cv2 as cv
 
