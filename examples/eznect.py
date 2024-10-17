@@ -40,7 +40,7 @@ def getVideo() -> np.ndarray:
     array = array[:, :, ::-1]
     return array
 
-def invertVideoColor(video: np.ndarray):
+def invertVideoColor(video: np.ndarray) -> np.ndarray:
     """
         Changes video from BGR to RGB (vice-versa)
 
@@ -106,6 +106,15 @@ def prettyDepth(depth: np.ndarray, smoothness=0) -> np.ndarray:
     depth = depth.astype(np.uint8)
     return depth
 
+def depth2Rgb(depth: np.ndarray) -> np.ndarray:
+    '''
+        Return depth in RGB: value -> [value,value,value]
+        Args:
+            depth: Depth map
+    '''
+    depth = prettyDepth(depth)
+    return np.repeat(depth[:, :, np.newaxis], 3, axis=2)
+
 def moveBody(dev: freenect.DevPtr, tilt: int, accumulate=False):
     """
         Moves Kinect's body
@@ -137,7 +146,6 @@ def controlKinect(dev: freenect.DevPtr, k: int):
         s: Levels the body
         l: Cycles between LEDs
     '''
-    k = ord(k)
     if k == ord('w'):
         moveBody(dev, 1, True)
     if k == ord('x'):

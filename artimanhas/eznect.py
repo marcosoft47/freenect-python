@@ -66,8 +66,8 @@ def changeLed(dev: freenect.DevPtr, color: int):
             freenect.LED_BLINK_GREEN, 
             freenect.LED_BLINK_RED_YELLOW
     '''
-    if 0 <= cor <= 5:
-        freenect.set_led(dev, cor)
+    if 0 <= color <= 5:
+        freenect.set_led(dev, color)
     else:
         print("Invalid color!\nChoose one that Freenect offers (freenect.LED_*)")
 
@@ -122,7 +122,6 @@ def controlKinect(dev: freenect.DevPtr, k: int):
         s: Levels the body
         l: Cycles between LEDs
     '''
-    k = ord(k)
     if k == ord('w'):
         moveBody(dev, 1, True)
     if k == ord('x'):

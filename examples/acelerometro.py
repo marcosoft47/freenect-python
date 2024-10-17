@@ -1,4 +1,4 @@
-import kinect.examples.eznect as eznect
+import eznect
 import freenect
 import cv2 as cv
 
@@ -15,4 +15,7 @@ def main(dev, ctx):
         raise freenect.Kill
     if k == ord('t'):
         print(acc)
-freenect.runloop(body=main,video=eznect.runDisplayVideo)
+
+def displayVideo(dev, data, timestamp):
+    cv.imshow("RGB", cv.cvtColor(data, cv.COLOR_BGR2RGB))
+freenect.runloop(body=main,video=displayVideo)

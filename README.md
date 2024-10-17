@@ -1,7 +1,7 @@
 # Freenect's Python Wrapper
 Everything I gathered from freenect's python wrapper
 
- **Note:** The file `eznect.py` was made to simplify some stuff. Feel free to add it in your projects!
+ **Note:** The file `eznect.py` was made to gather useful functions. Feel free to add it in your projects!
 
 # Installation
 
