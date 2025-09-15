@@ -1,4 +1,4 @@
-''' Facilidades do freenect '''
+''' Freenect, but easier! '''
 
 import freenect
 from freenect import np
@@ -13,15 +13,10 @@ leds = [freenect.LED_OFF,
         freenect.LED_BLINK_RED_YELLOW]
 
 
-def getDepth() -> np.ndarray:
-    '''
-        Retorna a profundidade como matriz do Numpy
-    '''
-    array,_ = freenect.sync_get_depth()
-    array = array.astype(np.uint16)
-    return array
-
 def getIR() -> np.ndarray:
+    '''
+        Returns Kinect's infrared feed
+    '''
     array,_ = freenect.sync_get_video(0, freenect.VIDEO_IR_8BIT)
     np.clip(array, 0, 2047, array)
     return array
@@ -36,6 +31,31 @@ def getVideo() -> np.ndarray:
     array,_ = freenect.sync_get_video()
     array = array[:, :, ::-1]
     return array
+
+def getDepth() -> np.ndarray:
+    '''
+        Returns Kinect's depth as a numpy array
+
+        Returns:
+            Depth as a numpy array in uint16 format
+    '''
+    array,_ = freenect.sync_get_depth()
+    array = array.astype(np.uint16)
+    return array
+
+def prettyDepth(depth: np.ndarray, smoothness=0) -> np.ndarray:
+    '''
+        Return depth as a smoother depth map
+
+        Args:
+            depth: Depth map
+            smoothness: How smooth the depth map will become
+    '''
+    np.clip(depth, 0, 2047, depth)
+    depth >>= smoothness
+    depth = depth.astype(np.uint8)
+    return depth
+
 
 def cycleLed(dev: freenect.DevPtr):
     '''
@@ -59,37 +79,17 @@ def changeLed(dev: freenect.DevPtr, color: int):
             color: LED's color
         
         color options:
-            freenect.LED_OFF,
-            freenect.LED_GREEN, 
-            freenect.LED_RED, 
-            freenect.LED_YELLOW, 
-            freenect.LED_BLINK_GREEN, 
-            freenect.LED_BLINK_RED_YELLOW
+            0: freenect.LED_OFF,
+            1: freenect.LED_GREEN, 
+            2: freenect.LED_RED, 
+            3: freenect.LED_YELLOW, 
+            4: freenect.LED_BLINK_GREEN, 
+            5: freenect.LED_BLINK_RED_YELLOW
     '''
     if 0 <= color <= 5:
         freenect.set_led(dev, color)
     else:
         print("Invalid color!\nChoose one that Freenect offers (freenect.LED_*)")
-
-# def runDisplayVideo(dev, data, timestamp):
-#     '''
-#         Roda o vídeo no runloop.
-#         Recomendado usar apenas em testes
-#     '''
-#     cv.imshow("RGB", cv.cvtColor(data, cv.COLOR_BGR2RGB))
-
-def prettyDepth(depth: np.ndarray, smoothness=0) -> np.ndarray:
-    '''
-        Return depth as a smoother depth map
-
-        Args:
-            depth: Depth map
-            smoothness: How smooth the depth map will become
-    '''
-    np.clip(depth, 0, 2047, depth)
-    depth >>= smoothness
-    depth = depth.astype(np.uint8)
-    return depth
 
 def moveBody(dev: freenect.DevPtr, tilt: int, accumulate=False):
     """
@@ -112,7 +112,7 @@ def controlKinect(dev: freenect.DevPtr, k: int):
     '''
         Compilation of buttons to control the Kinect
         Args:
-            dev: Kinect device point3er
+            dev: Kinect device pointer
             k: character unicode
                 use ord(char) to find the character unicode
         Botões:
@@ -134,6 +134,9 @@ def controlKinect(dev: freenect.DevPtr, k: int):
         raise freenect.Kill
 
 '''
+Bunch of stuff that the lib have
+
+
 freenect.LED_OFF
 freenect.LED_GREEN
 freenect.LED_RED

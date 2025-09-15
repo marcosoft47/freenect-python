@@ -1,3 +1,9 @@
+'''
+    It's been a while since I did this file.
+    I think it was supposed to stabilize video using Kinect's cool features
+    That was, until I realized I'm not smart enough for this
+'''
+
 import cv2
 import numpy as np
 import freenect
@@ -36,13 +42,13 @@ def depth(dev, data, timestamp):
 
     # depth = prettyDepth(depth)
     depth = depth2Rgb(depth)
-    cv2.imshow('Profundidade', depth)
+    cv2.imshow('Depth', depth)
     outd.write(depth)
     
 def video(dev, data, timestamp):
     img = data
     img = img[:, :, ::-1]
-    cv2.imshow('Colmeia', img)
+    cv2.imshow('Video', img)
     out.write(img)
 
 

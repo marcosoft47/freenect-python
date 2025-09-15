@@ -26,6 +26,8 @@ Sometimes, you may get a libusb error, saying access denied. This happens becaus
 
     sudo chmod -R 777 /dev/bus/usb/
 
+It might not be a good idea to use `chown` instead of chmod. It will make your USB ports much more vulnerable.
+
 Since it happens frequently, I suggest you to make it an alias. Add the following to your `.bashrc` (or similar) file, so you can just run `fixnect` in your terminal
 
     alias fixnect="sudo chmod -R 777 /dev/bus/usb/"
